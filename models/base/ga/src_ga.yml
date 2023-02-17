@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: ga
+    database: "bigquery-public-data" 
+    schema: "google_analytics_sample" 
+    tables:
+      - name: sessions
+        identifier: ga_sessions_*
+        description: Main sessions table exported by GA4. Sharded by date. 
