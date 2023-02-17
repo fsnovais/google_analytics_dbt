@@ -36,3 +36,9 @@ models:
     # Applies to all files under models/example/
     example:
       materialized: view
+vars:
+  ga4:
+    project: "bigquery-public-data"
+    dataset: "ga4_obfuscated_sample_ecommerce"
+    start_date: "20210131" # Earliest date to load
+    frequency: "daily"
