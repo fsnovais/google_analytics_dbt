@@ -4,6 +4,7 @@ with
     ga4 as (
         select
             event_date_dt,
+            user_id,
             device_category,
             device_mobile_model_name,
             device_operating_system,
@@ -20,13 +21,19 @@ with
             traffic_source_name,
             traffic_source_medium,
             traffic_source_source,
+            ga_session_id,
             page_title,
-            page_referrer
+            page_referrer,
+            source,
+            medium,
+            campaign,
+            is_page_view as pageview
         from {{ ref("stg_ga4_events_base") }}
     ),
     ua as (
         select
             session_date_dt,
+            userid,
             devicecategory,
             mobiledevicemodel,
             operatingsystem,
@@ -43,8 +50,13 @@ with
             campaign,
             source,
             medium,
+            visitid,
             pagetitle,
-            referer
+            referer,
+            hostname,
+            medium,
+            campaign,
+            pageviews
         from {{ ref("stg_ga_sessions_base") }}
     )
 select *
