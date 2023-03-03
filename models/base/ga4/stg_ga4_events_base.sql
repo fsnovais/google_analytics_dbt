@@ -113,7 +113,18 @@ renamed as (
             ELSE 0
         END AS is_purchase
     from source
-)
+),
+data as (
+     select 
+        distinct 
+        event_timestamp
+        ,user_first_touch_timestamp
+        ,user_pseudo_id
+        ,geo_country
+        ,event_date_dt as date
+        -- ,landing_page
+    from renamed
+    group by 1,2,3,4,5
+ )
 
-select * from renamed
-qualify row_number() over(partition by event_date_dt, stream_id, user_pseudo_id, ga_session_id, event_name, event_timestamp, to_json_string(event_params)) = 1
+ select * from renamed
