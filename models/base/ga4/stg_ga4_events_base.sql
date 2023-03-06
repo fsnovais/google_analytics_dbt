@@ -1,14 +1,5 @@
 
-    {{
-        config(
-            materialized = 'incremental',
-            incremental_strategy = 'insert_overwrite',
-            partition_by={
-                "field": "event_date_dt",
-                "data_type": "date",
-            },
-        )
-    }}
+{{config(materialized = 'table')}}
 --BigQuery does not cache wildcard queries that scan across sharded tables which means it's best to materialize the raw event data as a partitioned table so that future queries benefit from caching
 with source as (
     select 
@@ -111,20 +102,50 @@ renamed as (
         CASE 
             WHEN event_name = 'purchase' THEN 1
             ELSE 0
-        END AS is_purchase
+        END AS is_purchase,
+        case 
+            when event_name = 'affiliate_link_click' then 1
+            else 0
+        end as is_affiliate_link_click,
+        case 
+            when event_name = 'click_top_10' then 1
+            else 0
+        end as is_affiliate_top10_click
     from source
+), 
+calculation as (
+        select 
+                *,
+                to_base64(md5(concat(stream_id, user_pseudo_id, cast(ga_session_id as string)))) as session_key
+        from renamed
 ),
 data as (
      select 
         distinct 
-        event_timestamp
-        ,user_first_touch_timestamp
+        ga_session_id
+        ,event_timestamp
         ,user_pseudo_id
         ,geo_country
         ,event_date_dt as date
-        -- ,landing_page
-    from renamed
-    group by 1,2,3,4,5
+        , trim(lower(regexp_replace(replace(replace(replace(page_location, 'www.', ''), 'http://', ''), 'https://', ''), r'\#.*$', '')), '/') as landing_page
+        ,countif(is_affiliate_link_click = 1) as affiliate_clicks_conversion
+        ,countif(is_affiliate_top10_click = 1) as affiliate_top10_clicks_conversion
+        ,max(case when page_location like '/complaint-received%' and traffic_source_medium = 'organic' then 1 else 0 end) complaint_received_conversion
+        ,count(distinct session_key) as sessions
+        ,countif(is_page_view = 1) as pageviews
+    from calculation
+    group by 1,2,3,4,5,6
  )
-
- select * from renamed
+select
+date,
+date_trunc(date, month) month_date,
+landing_page,
+geo_country as country,
+sum(sessions) sessions,
+sum(pageviews) pageviews,
+count(case when affiliate_clicks_conversion = 1 then user_pseudo_id end) affiliate_click_conversions,
+count(case when affiliate_top10_clicks_conversion = 1 then user_pseudo_id end) affiliate_top10_click_conversions,
+count(case when complaint_received_conversion = 1 then user_pseudo_id end) complaint_received_conversions,
+count(case when affiliate_clicks_conversion = 1 then user_pseudo_id end) + count(case when affiliate_top10_clicks_conversion = 1 then user_pseudo_id end) + count(case when complaint_received_conversion = 1 then user_pseudo_id end) as conversions
+from data
+group by date, landing_page, country
