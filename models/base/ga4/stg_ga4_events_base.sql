@@ -25,9 +25,7 @@ with source as (
         platform,
         ecommerce,
         items,
-        from {{ source('ga4', 'events') }}
-        where _table_suffix not like '%intraday%'
-        and cast( _table_suffix as int64) >= 20210131
+        select * from {{ ref('stg_ga4_events_union') }}
 ),
 renamed as (
     select 
