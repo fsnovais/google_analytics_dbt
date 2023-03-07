@@ -105,10 +105,6 @@ renamed as (
             when event_name = 'affiliate_link_click' then 1
             else 0
         end as is_affiliate_link_click,
-        case 
-            when event_name = 'click_top_10' then 1
-            else 0
-        end as is_affiliate_top10_click
     from source
 ), 
 calculation as (
@@ -127,7 +123,7 @@ data as (
         ,event_date_dt as date
         , trim(lower(regexp_replace(replace(replace(replace(page_location, 'www.', ''), 'http://', ''), 'https://', ''), r'\#.*$', '')), '/') as landing_page
         ,countif(is_affiliate_link_click = 1) as affiliate_clicks_conversion
-        ,countif(is_affiliate_top10_click = 1) as affiliate_top10_clicks_conversion
+        ,0 as affiliate_top10_clicks_conversion
         ,max(case when page_location like '/complaint-received%' and traffic_source_medium = 'organic' then 1 else 0 end) complaint_received_conversion
         ,count(distinct session_key) as sessions
         ,countif(is_page_view = 1) as pageviews
