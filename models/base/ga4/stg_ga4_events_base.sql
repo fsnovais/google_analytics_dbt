@@ -24,8 +24,8 @@ with source as (
         stream_id,
         platform,
         ecommerce,
-        items,
-        select * from {{ ref('stg_ga4_events_union') }}
+        items
+        from {{ ref('stg_ga4_events_union') }}
 ),
 renamed as (
     select 
@@ -58,11 +58,11 @@ renamed as (
         device.language as device_language,
         device.is_limited_ad_tracking as device_is_limited_ad_tracking,
         device.time_zone_offset_seconds as device_time_zone_offset_seconds,
-        -- device.browser as device_browser,
-        -- device.browser_version as device_browser_version,
-        -- device.web_info.browser as device_web_info_browser,
-        -- device.web_info.browser_version as device_web_info_browser_version,
-        -- device.web_info.hostname as device_web_info_hostname,
+        device.browser as device_browser,
+        device.browser_version as device_browser_version,
+        device.web_info.browser as device_web_info_browser,
+        device.web_info.browser_version as device_web_info_browser_version,
+        device.web_info.hostname as device_web_info_hostname,
         geo.continent as geo_continent,
         geo.country as geo_country,
         geo.region as geo_region,

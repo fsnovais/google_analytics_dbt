@@ -38,7 +38,7 @@ models:
       materialized: view
 vars:
   ga4:
-    project: "bigquery-public-data"
-    dataset: "ga4_obfuscated_sample_ecommerce"
-    start_date: "20210131" # Earliest date to load
+    project: "bi-bq-cwv-global"
+    dataset: "analytics_328078850"
+    start_date: "20220820" # Earliest date to load
     frequency: "daily"
