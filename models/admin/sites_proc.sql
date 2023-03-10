@@ -8,5 +8,5 @@ site_name_country site_country
 ,parent_site
 ,status
 ,notes
-FROM `{{target.project}}.agency_data_pipeline.SITES`
+FROM `seo-ag.agency_data_pipeline.SITES`
 WHERE parent_site IS NOT NULL

@@ -44,7 +44,7 @@ FROM
 	,tags
 	,first_value(time_of_entry) over(partition by accuranker_name, keyword, date_trunc(parse_date("%m/%d/%Y",split(timestamp, " ")[offset(0)]), month) order by time_of_entry desc) fv
 	,time_of_entry
-	FROM `{{ target.project }}.agency_data_pipeline.accuranker_keywords`
+	FROM `seo-ag.agency_data_pipeline.accuranker_keywords`
 	WHERE keyword IS NOT NULL 
 )
 

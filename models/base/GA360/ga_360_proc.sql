@@ -2,79 +2,79 @@ WITH union_session AS (
 	SELECT
 	*,
 	_TABLE_SUFFIX
-	FROM `{{target.project}}.183853840.ga_sessions_*`
+	FROM `seo-ag.183853840.ga_sessions_*`
 	UNION ALL
 	SELECT
 	*,
 	_TABLE_SUFFIX
 	FROM
-	`{{target.project}}.105263948.ga_sessions_*`
+	`seo-ag.105263948.ga_sessions_*`
 	UNION ALL
 	SELECT
 	*,
 	_TABLE_SUFFIX
 	FROM
-	`{{target.project}}.165478623.ga_sessions_*`
+	`seo-ag.165478623.ga_sessions_*`
 	UNION ALL
 	SELECT
 	*,
 	_TABLE_SUFFIX
 	FROM
-	`{{target.project}}.175962729.ga_sessions_*`
+	`seo-ag.175962729.ga_sessions_*`
 	UNION ALL
 	SELECT
 	*,
 	_TABLE_SUFFIX
 	FROM
-	`{{target.project}}.225371913.ga_sessions_*`
+	`seo-ag.225371913.ga_sessions_*`
 	UNION ALL
 	SELECT
 	*,
 	_TABLE_SUFFIX
 	FROM
-	`{{target.project}}.179442303.ga_sessions_*`
+	`seo-ag.179442303.ga_sessions_*`
 	UNION ALL
 	SELECT
 	*,
 	_TABLE_SUFFIX
 	FROM
-	`{{target.project}}.200066837.ga_sessions_*`
+	`seo-ag.200066837.ga_sessions_*`
 	UNION ALL
 	SELECT
 	*,
 	_TABLE_SUFFIX
 	FROM
-	`{{target.project}}.200066837.ga_sessions_*`
+	`seo-ag.200066837.ga_sessions_*`
 	UNION ALL
 	SELECT
 	*,
 	_TABLE_SUFFIX
 	FROM
-	`{{target.project}}.77278837.ga_sessions_*`
+	`seo-ag.77278837.ga_sessions_*`
 	UNION ALL
 	SELECT
 	*,
 	_TABLE_SUFFIX
 	FROM
-	`{{target.project}}.176228952.ga_sessions_*`
+	`seo-ag.176228952.ga_sessions_*`
 	UNION ALL
 	SELECT
 	*,
 	_TABLE_SUFFIX
 	FROM
-	`{{target.project}}.183852433.ga_sessions_*`
+	`seo-ag.183852433.ga_sessions_*`
 	UNION ALL
 	SELECT
 	*,
 	_TABLE_SUFFIX
 	FROM
-	`{{target.project}}.176238156.ga_sessions_*`
+	`seo-ag.176238156.ga_sessions_*`
 	UNION ALL
 	SELECT
 	*,
 	_TABLE_SUFFIX
 	FROM
-	`{{target.project}}.195930178.ga_sessions_*`
+	`seo-ag.195930178.ga_sessions_*`
 ),
 
 data as

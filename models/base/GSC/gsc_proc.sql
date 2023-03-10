@@ -57,7 +57,7 @@ FROM (
 		regexp_replace(query,r'[^a-zA-Z0-9]',' ') query,
 		time_of_entry,
 		first_value(time_of_entry) OVER (PARTITION BY CAST(date_month AS Date), query, landing_page, country ORDER BY time_of_entry DESC) lv
-		FROM `{{ target.project }}.agency_data_pipeline.gsc_report_sm`
+		FROM `seo-ag.agency_data_pipeline.gsc_report_sm`
 		WHERE date_month NOT IN ('44531','44287','44317','44256')
 
 
