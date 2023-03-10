@@ -1,0 +1,293 @@
+version: 2
+
+models:
+  - name: branded_keywords_proc
+    description: Dedupe Admin Branded Keywords table
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - parent_site
+            - brand_regex
+    columns:
+      - name: parent_site
+        tests:
+          - not_null
+      - name: brand_regex
+        tests:
+          - not_null                 
+
+
+  - name: keyword_categories_proc
+    description: Dedupe Admin Keyword Categories table
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - parent_site
+            - category_bucket
+            - text
+    columns:
+      - name: parent_site
+        tests:
+          - not_null
+      - name: category_bucket
+        tests:
+          - not_null          
+      - name: category_regex
+        tests:
+          - not_null                 
+
+  - name: keyword_subcategories_proc
+    description: Dedupe Admin Keyword Categories table
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - parent_site
+            - subcategory_bucket
+            - text
+    columns:
+      - name: parent_site
+        tests:
+          - not_null
+      - name: subcategory_bucket
+        tests:
+          - not_null          
+      - name: subcategory_regex
+        tests:
+          - not_null                  
+
+  - name: keyword_intents_proc
+    description: Dedupe Admin Keyword Categories table
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - parent_site
+            - intent_bucket
+            - text
+    columns:
+      - name: parent_site
+        tests:
+          - not_null
+      - name: intent_bucket
+        tests:
+          - not_null          
+      - name: intent_regex
+        tests:
+          - not_null                 
+
+  - name: page_types_proc
+    description: Dedupe Admin Keyword Categories table
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - parent_site
+            - page_type_bucket
+            - text
+    columns:
+      - name: parent_site
+        tests:
+          - not_null
+      - name: page_type_bucket
+        tests:
+          - not_null          
+      - name: page_type_regex
+        tests:
+          - not_null 
+
+
+  - name: sites_proc
+    description: Dedupe Admin Keyword Categories table
+    columns:
+      - name: site
+        tests:
+          - not_null
+
+  - name: ga_360_monthly_agg
+    description: Unnest GA360 hits stream into daily metrics
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - month_date
+            - landing_page_url
+            - country
+    columns:
+      - name: month_date
+        tests:
+          - not_null
+      - name: landing_page_url
+        tests:
+          - not_null                   
+      - name: country
+        tests:
+          - not_null 
+
+  - name: gsc_proc
+    description: Dedupe gsc data
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - month_date
+            - country
+            - landing_page_url
+            - query
+    columns:
+      - name: month_date
+        tests:
+          - not_null
+      - name: landing_page_url
+        tests:
+          - not_null           
+      - name: query
+        tests:
+          - not_null                    
+
+  - name: gsc_keyword_mappings
+    description: Dedupe gsc data
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - site
+            - month_date
+            - country
+            - landing_page_url
+            - query
+    columns:
+      - name: impressions   
+        tests:
+           - dbt_expectations.expect_column_sums_to_match:
+                model_b: ref('gsc_proc')          
+                column_name_b: impressions      
+      - name: month_date
+        tests:
+          - not_null
+      - name: landing_page_url
+        tests:
+          - not_null           
+      - name: query
+        tests:
+          - not_null              
+
+  - name: accuranker_domains_proc
+    description: Dedupe accuranker domains
+    columns:
+      - name: id   
+        tests:
+          - not_null
+          - unique      
+
+  - name: accuranker_keywords_proc
+    description: Dedupe accuranker keywords
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - domain_id
+            - month_date
+            - query
+    columns:
+      - name: query   
+        tests:
+          - not_null
+
+  - name: accuranker_keyword_mappings
+    description: Join keyword mappings to accuranker data
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - site
+            - country
+            - month_date
+            - keyword_text             
+    columns:       
+      - name: search_volume   
+        tests:
+           - dbt_expectations.expect_column_sums_to_match:
+                model_b: ref('accuranker_keywords_proc')          
+                column_name_b: search_volume   
+
+  - name: accuranker_monthly_agg
+    description: Dedupe accuranker keywords
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - site_domain_subfolder
+            - country
+            - month_date
+            - query
+    columns:
+      - name: query   
+        tests:
+          - not_null    
+
+  - name: ga_gsc_organic_join
+    description: Aggregate accuranker, gsc & ga data
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - site
+            - month_date
+            - landing_page_url
+            - country
+            - keyword_text    
+    columns:        
+      - name: impressions   
+        tests:
+           - dbt_expectations.expect_column_sums_to_match:
+                model_b: ref('gsc_keyword_mappings')          
+                column_name_b: impressions     
+      - name: keyword_attributed_sessions   
+        tests:
+           - dbt_expectations.expect_column_sums_to_match:
+                model_b: ref('ga_360_monthly_agg')          
+                column_name_b: sessions                           
+                                      
+
+  - name: ga_gsc_organic_join_keyword
+    description: Aggregate accuranker, gsc & ga data
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - site
+            - month_date
+            - country
+            - keyword_text    
+    columns:        
+      - name: impressions   
+        tests:
+           - dbt_expectations.expect_column_sums_to_match:
+                model_b: ref('ga_gsc_organic_join')          
+                column_name_b: impressions     
+      - name: sessions   
+        tests:
+           - dbt_expectations.expect_column_sums_to_match:
+                model_b: ref('ga_gsc_organic_join')          
+                column_name_b: keyword_attributed_sessions   
+
+  - name: agg_accuranker_gsc_ga
+    description: Aggregate accuranker, gsc & ga data
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - site
+            - country
+            - month_date
+            - keyword_text             
+
+  - name: agg_keyword_analytics           
+    columns:        
+      - name: impressions   
+        tests:
+           - dbt_expectations.expect_column_sums_to_match:
+                model_b: ref('ga_gsc_organic_join_keyword')          
+                column_name_b: impressions        
+      - name: search_volume   
+        tests:
+           - dbt_expectations.expect_column_sums_to_match:
+                model_b: ref('accuranker_keyword_mappings')          
+                column_name_b: search_volume    
+      - name: conversions   
+        tests:
+           - dbt_expectations.expect_column_sums_to_be_less_than:
+                model_b: ref('ga_gsc_organic_join_keyword')          
+                column_name_b: 1.01*conversions                                         
+           - dbt_expectations.expect_column_sums_to_be_more_than:
+                model_b: ref('ga_gsc_organic_join_keyword')          
+                column_name_b: 0.99*conversions                 
