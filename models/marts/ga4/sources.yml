@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: map
+    database: bi-bq-cwv-global
+    schema: dbt_cmedia_dev
+    tables:
+      - name: country_language
+        identifier: country_language
+        description: Map of all the countries and its main language

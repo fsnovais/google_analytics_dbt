@@ -1,0 +1,46 @@
+version: 2
+
+sources:
+  - name: ga4_328078850
+    database: bi-bq-cwv-global
+    schema: analytics_328078850
+    tables:
+      - name: events
+        identifier: events_*
+        description: Main events table exported by GA4. Sharded by date. 
+      - name: events_intraday
+        identifier: events_intraday_*
+        description: Intraday events table which is optionally exported by GA4. Always contains events from the current day.
+
+  - name: ga4_328201495
+    database: bi-bq-cwv-global
+    schema: analytics_328201495
+    tables:
+      - name: events
+        identifier: events_*
+        description: Main events table exported by GA4. Sharded by date. 
+      - name: events_intraday
+        identifier: events_intraday_*
+        description: Intraday events table which is optionally exported by GA4. Always contains events from the current day.
+
+  - name: ga4_328497619
+    database: bi-bq-cwv-global
+    schema: analytics_328497619
+    tables:
+      - name: events
+        identifier: events_*
+        description: Main events table exported by GA4. Sharded by date. 
+      - name: events_intraday
+        identifier: events_intraday_*
+        description: Intraday events table which is optionally exported by GA4. Always contains events from the current day.
+
+  - name: ga4_325398919
+    database: bi-bq-cwv-global
+    schema: analytics_325398919
+    tables:
+      - name: events
+        identifier: events_*
+        description: Main events table exported by GA4. Sharded by date. 
+      - name: events_intraday
+        identifier: events_intraday_*
+        description: Intraday events table which is optionally exported by GA4. Always contains events from the current day.
