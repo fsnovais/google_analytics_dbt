@@ -30,16 +30,16 @@ select
 from {{ ref("ga4_stats") }}
 union all
 select
-    TRIM(SPLIT(site, '-')[SAFE_ORDINAL(1)]) site_split,
+    trim(split(site, '-')[safe_ordinal(1)]) site_split,
     site,
     country,
-    TRIM(SPLIT(site, '-')[SAFE_ORDINAL(2)]) language_split,
+    trim(split(site, '-')[safe_ordinal(2)]) language_split,
     page_type,
     site_section,
     null,
     source,
     medium,
-    deviceCategory,
+    devicecategory,
     null,
     null,
     date,
