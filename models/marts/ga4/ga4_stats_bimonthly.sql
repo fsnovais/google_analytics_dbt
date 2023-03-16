@@ -14,7 +14,7 @@ with stats_daily as (
     select
         *,
         date_trunc(date, isoweek) as week_date
-    from {{ ref('ga4_stats') }}
+    from {{ ref('ga_joined') }}
 )
 ,stats_monthly_pre as (
     select

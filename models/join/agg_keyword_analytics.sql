@@ -1,9 +1,17 @@
+{{ config(materialized="table") }}
+
 SELECT
+date,
 month_date,
 unix_month_date,
 site,
 site_domain_subfolder site_domain,
+hostname,
+site_section,
 country,
+source,
+medium,
+deviceCategory,
 case when keyword_text = 'Not Attributed' then '-' else keyword_top_landing_page end as keyword_top_landing_page,
 competitor_site_domain,
 competitor_highest_ranking_page,

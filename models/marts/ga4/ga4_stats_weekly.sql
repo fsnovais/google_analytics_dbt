@@ -11,7 +11,7 @@
 ] %}
 
 with stats_daily as (
-    select * from {{ ref('ga4_stats') }}
+    select * from {{ ref('ga_joined') }}
 )
 , stats_monthly_pre as (
     select

@@ -7,11 +7,14 @@
 )}}
 
 SELECT
+date,
 month_date,
 unix_month_date,
 site,
 site_domain_subfolder,
+page_hostname,
 country,
+site_section,
 landing_page_url,
 query,
 -- channel_grouping,
@@ -26,12 +29,15 @@ min(avg_position) avg_position,
 max(ctr) ctr
 FROM (
 
-	SELECT
+	SELECT 
+    date,
 	month_date,
 	unix_date(month_date) unix_month_date,
 	b.site,
 	a.site_domain_subfolder,
+    regexp_extract(a.site_domain_subfolder, '(?:http[s]?://)?(?:www\\.)?(.*?)(?:(?:/|:)(?:.)*|$)') as page_hostname,
 	a.country,
+    site_section,
 	landing_page_url,
 	a.query,
 --	'Organic Search' as channel_grouping,
@@ -52,4 +58,4 @@ FROM (
 		AND a.country = b.country
 	)
 )
-GROUP BY month_date, unix_month_date, site, site_domain_subfolder, landing_page_url, query, country
+GROUP BY date, month_date, unix_month_date, site, site_domain_subfolder,page_hostname, landing_page_url, query, country, site_section

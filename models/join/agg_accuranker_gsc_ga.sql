@@ -1,9 +1,15 @@
 SELECT
+date,
 month_date,
 unix_month_date,
 site,
 site_domain_subfolder,
+hostname,
+site_section,
 country,
+source,
+medium,
+deviceCategory,
 keyword_text,
 max(keyword_top_landing_page) keyword_top_landing_page,
 max(keyword_intent) keyword_intent,
@@ -41,9 +47,15 @@ FROM
 )
 
 GROUP BY 
+date,
 month_date,
 unix_month_date,
 site,
 site_domain_subfolder,
+hostname,
+site_section,
 country,
+source,
+medium,
+deviceCategory,
 keyword_text

@@ -75,9 +75,8 @@ WITH union_session AS (
 	_TABLE_SUFFIX
 	FROM
 	`seo-ag.195930178.ga_sessions_*`
-),
-
-data as
+)
+, data as
 (
 	SELECT 
 	distinct
@@ -85,7 +84,12 @@ data as
 	visitStartTime,
 	clientId,
 	geoNetwork.country,
+    trafficSource.source,
+    trafficSource.medium,
+    device.deviceCategory,
 	parse_date("%Y%m%d", date) date,
+    h.page.hostname,
+    h.appInfo.landingScreenName page_location,
 	lower(trim(regexp_replace(regexp_replace(replace(replace(replace(replace(h.appInfo.landingScreenName,'www.',''),'http://',''),'https://',''),'.html',''),r'\?.*$',''),r'\#.*$',''),'/')) landing_page,
 	max(case when h.eventinfo.eventcategory = 'Outbound links' and h.eventinfo.eventaction = 'Click' then 1 else 0 end) affiliate_clicks_conversion,
 	max(case when h.eventinfo.eventcategory = 'Outbound links' and h.eventinfo.eventaction = 'Click Top 10' then 1 else 0 end) affiliate_top10_clicks_conversion,
@@ -100,15 +104,25 @@ data as
 	visitStartTime,
 	clientId,
 	geoNetwork.country,
+    trafficSource.source,
+    trafficSource.medium,
+    device.deviceCategory,
 	date,
+    hostname,
+    h.appInfo.landingScreenName,
 	lower(trim(regexp_replace(regexp_replace(replace(replace(replace(replace(h.appInfo.landingScreenName,'www.',''),'http://',''),'https://',''),'.html',''),r'\?.*$',''),r'\#.*$',''),'/'))
 )
 
 select
 date,
 date_trunc(date, month) month_date,
+hostname,
+page_location,
 landing_page,
 country,
+source,
+medium,
+deviceCategory,
 sum(sessions) sessions,
 sum(pageviews) pageviews,
 count(case when affiliate_clicks_conversion = 1 then clientId end) affiliate_click_conversions,
@@ -116,4 +130,4 @@ count(case when affiliate_top10_clicks_conversion = 1 then clientId end) affilia
 count(case when complaint_received_conversion = 1 then clientId end) complaint_received_conversions,
 count(case when affiliate_clicks_conversion = 1 then clientId end) + count(case when affiliate_top10_clicks_conversion = 1 then clientId end) + count(case when complaint_received_conversion = 1 then clientId end) as conversions
 from data
-group by date, landing_page, country
+group by date, hostname, page_location, landing_page, country, source, medium, deviceCategory
