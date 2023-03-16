@@ -106,7 +106,10 @@ from
             devicecategory,
             sessions,
             pageviews,
-            conversions
+            conversions,
+            bounces,
+            engaged_sessions,
+            engagement_time_seconds
 
         from
             (
@@ -128,8 +131,10 @@ from
                     devicecategory,
                     coalesce(sum(sessions), 0) sessions,
                     coalesce(sum(pageviews), 0) pageviews,
-                    coalesce(sum(conversions), 0) conversions
-
+                    coalesce(sum(conversions), 0) conversions,
+                    coalesce(sum(bounces), 0) bounces,
+                    coalesce(sum(engaged_sessions), 0) engaged_sessions,
+                    coalesce(sum(engagement_time_seconds), 0) engagement_time_seconds
                 from {{ ref("ga_360_proc") }}
                 where landing_page is not null
                 group by

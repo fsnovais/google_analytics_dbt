@@ -51,6 +51,12 @@ with
             parse_date("%Y%m%d", date) date,
             h.page.hostname,
             h.appinfo.landingscreenname page_location,
+            case 
+                when totals.timeOnSite > 10
+                then 1
+                else 0
+            end engaged_session,
+            totals.timeOnSite,
             lower(
                 trim(
                     regexp_replace(
@@ -108,7 +114,8 @@ with
                 end
             ) complaint_received_conversion,
             max(totals.visits) as sessions,
-            max(totals.pageviews) as pageviews
+            max(totals.pageviews) as pageviews,
+            max(totals.bounces) as bounces
         from union_session, unnest(hits) h
         where
             channelgrouping = 'Organic Search'
@@ -124,6 +131,8 @@ with
             date,
             hostname,
             h.appinfo.landingscreenname,
+            engaged_session,
+            totals.timeOnSite,
             lower(
                 trim(
                     regexp_replace(
@@ -164,8 +173,12 @@ select
     source,
     medium,
     devicecategory,
+    if(engaged_session = 1, timeOnSite, 0) engagement_time_seconds,
     sum(sessions) sessions,
     sum(pageviews) pageviews,
+    sum(bounces) bounces,
+    sum(engaged_session) engaged_sessions,
+
     count(
         case when affiliate_clicks_conversion = 1 then clientid end
     ) affiliate_click_conversions,
@@ -182,4 +195,4 @@ select
     ) as conversions
 from data
 group by
-    date, hostname, page_location, landing_page, country, source, medium, devicecategory
+    date, hostname, page_location, landing_page, country, source, medium, devicecategory, engagement_time_seconds

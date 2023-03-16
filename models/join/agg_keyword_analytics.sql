@@ -53,6 +53,11 @@ select
     pageviews,
     lag(pageviews) over (w1) pageviews_mom,
     conversions,
-    lag(conversions) over (w1) conversions_mom
+    lag(conversions) over (w1) conversions_mom,
+    bounces,
+    engaged_sessions,
+    engagement_time_seconds,
+    safe_divide(engaged_sessions,sessions) engagement_rate,
+    safe_divide(sessions - engaged_sessions,sessions) bounces_rate
 from {{ ref("agg_accuranker_gsc_ga") }}
 window w1 as (partition by site, keyword_text order by month_date asc)

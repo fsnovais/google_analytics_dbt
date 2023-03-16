@@ -22,7 +22,10 @@ select
     avg(avg_position) avg_position,
     sum(keyword_attributed_sessions) sessions,
     sum(keyword_attributed_pageviews) pageviews,
-    sum(keyword_attributed_conversions) conversions
+    sum(keyword_attributed_conversions) conversions,
+    sum(url_bounces) bounces,
+    sum(engaged_sessions) engaged_sessions,
+    sum(engagement_time_seconds) engagement_time_seconds
 from {{ ref("ga_gsc_organic_join") }}
 group by
     date,

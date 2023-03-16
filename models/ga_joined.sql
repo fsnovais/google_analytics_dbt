@@ -48,11 +48,11 @@ select
     impressions,
     pageviews,
     sessions,
-    null,
-    null,
-    null,
-    null,
-    null,
+    engaged_sessions,
+    engagement_rate,
+    engagement_time_seconds,
+    bounces,
+    bounces_rate,
     conversions,
     'GA_360' as data_source
 from {{ ref("agg_keyword_analytics") }}

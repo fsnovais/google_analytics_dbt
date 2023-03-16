@@ -24,6 +24,9 @@ select
     clicks,
     avg_position,
     ctr,
+    url_bounces,
+    engaged_sessions,
+    engagement_time_seconds,
     case
         when url_clicks is null
         then url_sessions
@@ -76,7 +79,10 @@ from
             gsc.ctr,
             ga360.sessions url_sessions,
             ga360.pageviews url_pageviews,
-            ga360.conversions url_conversions
+            ga360.conversions url_conversions,
+            ga360.conversions url_bounces,
+            ga360.engaged_sessions,
+            ga360.engagement_time_seconds
         from {{ ref("ga_360_monthly_agg") }} ga360
         full outer join
             {{ ref("gsc_keyword_mappings") }} gsc
