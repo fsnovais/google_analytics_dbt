@@ -56,3 +56,5 @@ select
     conversions,
     'GA_360' as data_source
 from {{ ref("agg_keyword_analytics") }}
+where date < DATE("2022-08-01")
+
